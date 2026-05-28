@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>APP Recetas de Impresion PCN - V1</title>
+  <style>
+    :root {
+      --blue: #123c69;
+      --cyan: #20a7b8;
+      --ink: #172033;
+      --muted: #64748b;
+      --line: #d9e2ec;
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --danger: #b42318;
+      --success: #12715b;
+      --warning: #996a13;
+      --shadow: 0 12px 30px rgba(18, 60, 105, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      letter-spacing: 0;
+    }
+
+    button, input, select, textarea { font: inherit; }
+    button { border: 0; cursor: pointer; }
+    button:disabled { cursor: not-allowed; opacity: 0.55; }
+
+    .login-wrap {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 20px 14px;
+      background: linear-gradient(135deg, #123c69 0%, #1f9aad 100%);
+    }
+
+    .login-card,
+    .card {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 8px 22px rgba(18, 60, 105, 0.06);
+    }
+
+    .login-card {
+      max-width: 430px;
+      padding: 24px;
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.22);
+    }
+
+    h1, h2, h3 { color: var(--blue); line-height: 1.2; }
+    h1 { margin: 0; font-size: 26px; }
+    h2 { margin: 0; font-size: 22px; }
+    h3 { margin: 0; font-size: 17px; }
+    p { line-height: 1.45; }
+
+    .muted { color: var(--muted); }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--blue);
+      color: #fff;
+      padding: 12px 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .topbar-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .brand { min-width: 0; }
+    .brand strong { display: block; font-size: 15px; }
+    .brand span { display: block; color: #d9f3f7; font-size: 12px; margin-top: 2px; }
+
+    .session {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .session-name { display: none; color: #ecfeff; text-align: right; font-size: 12px; }
+
+    .page {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 16px 12px 36px;
+    }
+
+    .card { padding: 16px; }
+
+    .grid,
+    .stack,
+    .result-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .grid.two,
+    .grid.three,
+    .menu-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .field { display: grid; gap: 6px; min-width: 0; }
+    label, .label { color: #334155; font-size: 13px; font-weight: 700; }
+
+    input, select, textarea {
+      width: 100%;
+      min-width: 0;
+      min-height: 46px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      padding: 11px 12px;
+      outline: none;
+      font-size: 16px;
+    }
+
+    textarea { min-height: 92px; resize: vertical; }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(32, 167, 184, 0.18);
+    }
+
+    .btn {
+      min-height: 48px;
+      border-radius: 8px;
+      padding: 11px 14px;
+      background: #e9eef5;
+      color: var(--blue);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 700;
+      text-align: center;
+      overflow-wrap: anywhere;
+    }
+
+    .btn.primary { background: var(--blue); color: #fff; }
+    .btn.accent { background: var(--cyan); color: #062b34; }
+    .btn.ghost { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.35); }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 4px 0 14px;
+    }
+
+    .section-title p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+
+    .menu-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .module {
+      min-height: 118px;
+      width: 100%;
+      text-align: left;
+      align-items: flex-start;
+      justify-content: space-between;
+      background: #fff;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 24px rgba(18, 60, 105, 0.08);
+      padding: 16px;
+    }
+
+    .module strong { display: block; color: var(--blue); font-size: 17px; margin: 8px 0; }
+    .module span { display: block; color: var(--muted); font-weight: 400; font-size: 13px; line-height: 1.35; }
+    .module.locked { background: #f1f5f9; }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: #eaf7f9;
+      color: #0f6470;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .pill.warning { background: #fff4d6; color: var(--warning); }
+    .pill.success { background: #dff8ee; color: var(--success); }
+    .pill.lock { background: #e2e8f0; color: #475569; }
+
+    .result-card {
+      width: 100%;
+      text-align: left;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      display: grid;
+      gap: 8px;
+      color: var(--ink);
+    }
+
+    .result-card strong { color: var(--blue); font-size: 16px; overflow-wrap: anywhere; }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .kv {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 9px;
+      margin-top: 8px;
+    }
+
+    .kv div {
+      min-width: 0;
+      padding: 10px;
+      border-radius: 8px;
+      background: #f8fafc;
+      border: 1px solid #edf2f7;
+    }
+
+    .kv b { display: block; margin-bottom: 3px; color: #475569; font-size: 12px; }
+    .kv span { overflow-wrap: anywhere; }
+
+    .recipe-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .unit-card {
+      display: grid;
+      gap: 12px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfdff;
+    }
+
+    .message {
+      position: fixed;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      z-index: 30;
+      padding: 12px 14px;
+      border-radius: 8px;
+      color: #fff;
+      background: var(--blue);
+      box-shadow: var(--shadow);
+      transform: translateY(140%);
+      transition: transform 0.18s ease;
+      font-weight: 700;
+    }
+
+    .message.show { transform: translateY(0); }
+    .message.error { background: var(--danger); }
+    .message.success { background: var(--success); }
+
+    .loading {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      background: rgba(245, 247, 251, 0.78);
+      display: none;
+      place-items: center;
+      color: var(--blue);
+      font-weight: 800;
+    }
+
+    .loading.show { display: grid; }
+
+    @media (min-width: 720px) {
+      .page { padding: 24px 20px 44px; }
+      .session-name { display: block; }
+      .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid.three, .menu-grid, .kv { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <div id="loading" class="loading">Cargando</div>
+  <div id="message" class="message"></div>
+
+  <script>
+    const BASE_URL = 'https://script.google.com/macros/s/AKfycbw-WSRTqa1A1ViGNIOZQONKJ3NhqHQUhK-dryrInrwct1IAJ6MFQnR3tY36OmrE5keyjw/exec';
+
+    const state = {
+      user: null,
+      catalogos: { familias: [], maquinas: [] },
+      currentFicha: null,
+      currentRecetaId: null,
+      unidadesDraft: []
+    };
+
+    document.addEventListener('DOMContentLoaded', initApp);
+
+    function initApp() {
+      const storedUser = localStorage.getItem('pcn_recetas_user');
+      if (storedUser) {
+        try { state.user = JSON.parse(storedUser); }
+        catch (error) { localStorage.removeItem('pcn_recetas_user'); }
+      }
+
+      mostrarCargando();
+      api('inicializarEstructuraV1')
+        .then(() => api('getCatalogosIniciales'))
+        .then((res) => {
+          if (!res.ok) throw new Error(res.mensaje);
+          state.catalogos = res.data || {};
+          if (state.user) mostrarMenuPrincipal();
+          else mostrarLogin();
+        })
+        .catch((error) => mostrarLogin(error.message))
+        .finally(ocultarCargando);
+    }
+
+    function mostrarLogin(errorMessage) {
+      state.currentFicha = null;
+      document.getElementById('app').innerHTML = `
+        <main class="login-wrap">
+          <section class="login-card">
+            <h1>APP Recetas de Impresion PCN</h1>
+            <p class="muted">Consulta, captura, versiona y valida recetas operativas de impresion.</p>
+            <form class="grid" onsubmit="hacerLogin(event)">
+              <div class="field">
+                <label for="loginUsuario">Usuario</label>
+                <input id="loginUsuario" name="usuario" autocomplete="username" required>
+              </div>
+              <div class="field">
+                <label for="loginPassword">Contrasena</label>
+                <input id="loginPassword" name="password" type="password" autocomplete="current-password" required>
+              </div>
+              <button class="btn primary" type="submit">Entrar</button>
+              <div class="muted">Usuario inicial: admin / admin123</div>
+            </form>
+          </section>
+        </main>`;
+      if (errorMessage) mostrarMensaje(errorMessage, 'error');
+    }
+
+    function hacerLogin(event) {
+      event.preventDefault();
+      const form = event.target;
+      mostrarCargando();
+      api('loginUsuario', form.usuario.value.trim(), form.password.value)
+        .then((res) => {
+          if (!res.ok) throw new Error(res.mensaje);
+          state.user = res.data.user;
+          localStorage.setItem('pcn_recetas_user', JSON.stringify(state.user));
+          mostrarMensaje(res.mensaje || 'Login correcto.', 'success');
+          return api('getCatalogosIniciales');
+        })
+        .then((res) => {
+          if (!res.ok) throw new Error(res.mensaje);
+          state.catalogos = res.data || {};
+          mostrarMenuPrincipal();
+        })
+        .catch((error) => mostrarMensaje(error.message, 'error'))
+        .finally(ocultarCargando);
+    }
+
+    function mostrarMenuPrincipal() {
+      renderShell(`
+        ${viewHeader('Menu principal', 'Primero busca el SKU; si no existe, crea el producto y despues su receta.')}
+        <section class="menu-grid">
+          ${moduleButton('Buscar receta', 'SKU, descripcion, familia de color y maquina.', 'mostrarBusquedaProductos()', true)}
+          ${moduleButton('Alta producto', 'Crear producto activo con estatus Sin receta.', 'mostrarAltaProducto()', can('permiso_crear_producto'))}
+          ${moduleButton('Familias de color', 'Crear, consultar y asignar referencias de color.', 'mostrarFamiliasColor()', canAny(['permiso_crear_producto', 'permiso_crear_receta']))}
+          ${moduleButton('Crear receta', 'Alta de receta borrador con version automatica.', 'mostrarCrearReceta()', can('permiso_crear_receta'))}
+          ${moduleButton('Administracion basica', 'Estructura, usuarios y permisos desde hojas.', 'mostrarAdministracionBasica()', can('permiso_admin'))}
+          ${moduleButton('Corridas', 'Fase posterior visible y bloqueada.', 'moduloBloqueado()', false, true)}
+          ${moduleButton('Retenciones', 'Fase posterior visible y bloqueada.', 'moduloBloqueado()', false, true)}
+          ${moduleButton('Reportes', 'Fase posterior visible y bloqueada.', 'moduloBloqueado()', false, true)}
+        </section>`);
+    }
+
+    function mostrarBusquedaProductos() {
+      renderShell(`
+        ${viewHeader('Buscar SKU / Receta', 'Consulta rapida por SKU, descripcion, familia de color o maquina.')}
+        <section class="card">
+          <form id="searchForm" class="grid two" onsubmit="buscarProductosUI(event)">
+            ${field('SKU', 'sku')}
+            ${field('Descripcion', 'descripcion')}
+            <div class="field">
+              <label for="familia_color_id">Familia de color</label>
+              <select id="familia_color_id" name="familia_color_id">
+                <option value="">Todas</option>
+                ${familiaOptions()}
+              </select>
+            </div>
+            ${field('Maquina', 'maquina', '', false, false, 'maquinasList')}
+            ${maquinasDatalist()}
+            <div class="btn-row">
+              <button class="btn primary" type="submit">Buscar</button>
+              <button class="btn" type="button" onclick="mostrarAltaProducto()" ${can('permiso_crear_producto') ? '' : 'disabled'}>Alta producto</button>
+            </div>
+          </form>
+        </section>
+        <section id="resultados" class="result-list" style="margin-top:12px;"></section>`);
+    }
+
+    function buscarProductosUI(event) {
+      if (event) event.preventDefault();
+      const form = document.getElementById('searchForm');
+      const filtros = formToObject(form);
+      mostrarCargando();
+      api('buscarProductos', filtros)
+        .then((res) => {
+          if (!res.ok) throw new Error(res.mensaje);
+          renderResultadosProductos((res.data && res.data.resultados) || []);
+        })
+        .catch((error) => mostrarMensaje(error.message, 'error'))
+        .finally(ocultarCargando);
+    }
+
+    function renderResultadosProductos(resultados) {
+      const container = document.getElementById('resultados');
+      if (!resultados.length) {
+        container.innerHTML = `
+          <article class="card">
+            <strong>No se encontraron productos activos.</strong>
+            <p class="muted">Si el SKU no existe, crea el producto con estatus Sin receta antes de capturar la receta.</p>
+            <button class="btn primary" onclick="mostrarAltaProducto()" ${can('permiso_crear_producto') ? '' : 'disabled'}>Crear producto</button>
+          </article>`;
+        return;
+      }
+
+      container.innerHTML = resultados.map((row) => `
+        <button class="result-card" type="button" onclick="abrirFichaProducto('${escAttr(row.producto_id)}')">
+          <strong>${esc(row.sku)} - ${esc(row.descripcion)}</strong>
+          <div class="meta">
+            <span class="pill ${isYes(row.receta_vigente) ? 'success' : 'warning'}">Receta vigente: ${esc(row.receta_vigente)}</span>
+            <span>Familia: ${esc(row.familia_color || 'Sin familia')}</span>
+            <span>Maquinas: ${esc(row.maquinas_vigentes || 'Sin vigente')}</span>
+            <span>Recetas: ${esc(row.total_recetas)}</span>
+          </div>
+        </button>`).join('');
+    }
+
+    function abrirFichaProducto(producto_id) {
+      mostrarCargando();
+      api('getFichaProducto', producto_id)
+        .then((res) => {
+          if (!res.ok) throw new Error(res.mensaje);
+          state.currentFicha = res.data;
+          renderFichaProducto();
+        })
+        .catch((error) => mostrarMensaje(error.message, 'error'))
+        .finally(ocultarCargando);
+    }
+
+    function renderFichaProducto() {
+      const ficha = state.currentFicha;
+      if (!ficha) return mostrarBusquedaProductos();
+      const p = ficha.producto;
+      const recetas = ficha.recetas || [];
+      renderShell(`
+        ${viewHeader('Ficha del producto', `${esc(p.sku)} - ${esc(p.descripcion)}`)}
+        <section class="card">
+          <div class="recipe-head">
+            <div>
+              <h3>${esc(p.sku)}</h3>
+              <div class="muted">${esc(p.descripcion)}</div>
+            </div>
+            <span class="pill ${p.estatus_producto === 'Con receta vigente' ? 'success' : 'warning'}">${esc(p.estatus_producto || 'Sin receta')}</span>
+          </div>
+          <div class="kv">
+            <div><b>Familia de color</b><span>${esc(ficha.familia ? ficha.familia.nombre_familia : 'Sin familia')}</span></div>
+            <div><b>Presentacion</b><span>${esc(p.presentacion || '-')}</span></div>
+            <div><b>Material base</b><span>${esc(p.material_base || '-')}</span></div>
+            <div><b>Medidas</b><span>${esc(p.medidas_producto || '-')}</span></div>
+            <div><b>Gramaje</b><span>${esc(p.gramaje || '-')}</span></div>
+            <div><b>Colores estimados</b><span>${esc(p.colores_estimados || '-')}</span></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn" onclick="mostrarBusquedaProductos()">Volver a busqueda</button>
+            <button class="btn" onclick="mostrarAltaProducto('${escAttr(p.producto_id)}')" ${can('permiso_crear_producto') ? '' : 'disabled'}>Editar producto</button>
+            <button class="btn primary" onclick="mostrarCrearReceta('${escAttr(p.producto_id)}')" ${can('permiso_crear_receta') ? '' : 'disabled'}>Crear receta</button>
+          </div>
+        </section>
+        <section class="section-title" style="margin-top:18px;">
+          <div>
+            <h2>Recetas existentes</h2>
+            <p>La receta vigente se consulta como referencia operativa; cualquier cambio importante requiere nueva version.</p>
+          </div>
+        </section>
+        <section class="stack">
+          ${recetas.length ? recetas.map(renderRecipeCard).join('') : '<article class="card"><strong>Producto sin receta.</strong><p class="muted">Crea una receta borrador para capturar sus unidades.</p></article>'}
+        </section>`);
+    }
+
+    function mostrarAltaProducto(producto_id) {
+      const producto = producto_id && state.currentFicha ? state.currentFicha.producto : null;
+      renderShell(`
+        ${viewHeader(producto ? 'Editar producto' : 'Alta de producto', 'El producto se identifica por SKU y se crea inicialmente como Sin receta.')}
+        <section class="card">
+          <form class="grid two" onsubmit="guardarProductoUI(event)">
+            <input type="hidden" name="producto_id" value="${escAttr(producto ? producto.producto_id : '')}">
+            ${field('SKU', 'sku', producto ? producto.sku : '', true)}
+            ${field('Descripcion', 'descripcion', producto ? producto.descripcion : '', true)}
+            <div class="field">
+              <label for="familia_color_id">Familia de color</label>
+              <select id="familia_color_id" name="familia_color_id">
+                <option value="">Sin familia</option>
+                ${familiaOptions(producto ? producto.familia_color_id : '')}
+              </select>
+            </div>
+            ${field('Presentacion', 'presentacion', producto ? producto.presentacion : '')}
+            ${field('Medidas producto', 'medidas_producto', producto ? producto.medidas_producto : '')}
+            ${field('Material base', 'material_base', producto ? producto.material_base : '')}
+            ${field('Gramaje', 'gramaje', producto ? producto.gramaje : '')}
+            ${field('Colores estimados', 'colores_estimados', producto ? producto.colores_estimados : '')}
+            ${textarea('Observaciones tecnicas', 'observaciones_tecnicas', producto ? producto.observaciones_tecnicas : '')}
+            <div class="btn-row">
+              <button class="btn primary" type="submit">${producto ? 'Actualizar producto' : 'Guardar producto'}</button>
+              <button class="btn" type="button" onclick="${producto ? `abrirFichaProducto('${escAttr(producto.producto_id)}')` : 'mostrarMenuPrincipal()'}">Cancelar</button>
+            </div>
+          </form>
+        </section>`);
+    }
+
+    function guardarProductoUI(event) {
+      event.preventDefault();
+      const data = formToObject(event.target);
+      attachUser(data);
+      const fn = data.producto_id ? 'actualizarProducto' : 'crearProducto';
+      mostrarCargando();
+      api(fn, data)
+        .then((res) => {
+          const data = res.data || {};
+          if (!res.ok && !data.duplicate) throw new Error(res.mensaje);
+          if (data.duplicate) {
+            mostrarMensaje(res.mensaje, 'error');
+            abrirFichaProducto(data.producto_id);
+            return;
+          }
+          mostrarMensaje(res.mensaje, 'success');
+          abrirFichaProducto(data.producto.producto_id);
+        })
+        .catch((error) => mostrarMensaje(error.message, 'error'))
+        .finally(ocultarCargando);
+    }
+
+    function mostrarFamiliasColor(familia_id) {
+      mostrarCargando();
+      api('listarFamiliasColor')
+        .then((res) => {
+          if (!res.ok) throw new Error(res.mensaje);
+          state.catalogos.familias = (res.data && res.data.familias) || [];
+          const productoAbierto = state.currentFicha && state.currentFicha.producto;
+          const familiaEdit = familia_id ? state.catalogos.familias.find((f) => f.familia_color_id === familia_id) : null;
+          renderShell(`
+            ${viewHeader('Familias de color', 'Agrupan apariencia, tintas, tonos o referencias visuales; no sustituyen la receta especifica.')}
+            <section class="card">
+              <form class="grid two" onsubmit="guardarFamiliaColorUI(event)">
+                <input type="hidden" name="familia_color_id" value="${escAttr(familiaEdit ? familiaEdit.familia_color_id : '')}">
+                ${field('Nombre familia', 'nombre_familia', familiaEdit ? familiaEdit.nombre_familia : '', true)}
+                ${field('Tono objetivo general', 'tono_objetivo_general', familiaEdit ? familiaEdit.tono_objetivo_general : '')}
+                ${textarea('Descripcion familia', 'descripcion_familia', familiaEdit ? familiaEdit.descripcion_familia : '')}
+                ${textarea('Observaciones color', 'observaciones_color', familiaEdit ? familiaEdit.observaciones_color : '')}
+                ${productoAbierto && !familiaEdit ? `<label class="field"><span class="label">Ligar al producto abierto</span><select name="producto_id"><option value="">No ligar ahora</option><option value="${escAttr(productoAbierto.producto_id)}">${esc(productoAbierto.sku)} - ${esc(productoAbierto.descripcion)}</option></select></label>` : ''}
+                <div class="btn-row">
+                  <button class="btn primary" type="submit" ${canAny(['permiso_crear_producto', 'permiso_crear_receta']) ? '' : 'disabled'}>${familiaEdit ? 'Actualizar familia' : 'Crear familia'}</button>
+                  ${familiaEdit ? '<button class="btn" type="button" onclick="mostrarFamiliasColor()">Nueva familia</button>' : ''}
+                  <button class="btn" type="button" onclick="mostrarMenuPrincipal()">Volver</button>
+                </div>
+              </form>
+            </section>
+            <section class="stack" style="margin-top:12px;">
+              ${state.catalogos.familias.length ? state.catalogos.familias.map(renderFamiliaCard).join('') : '<article class="card"><strong>No hay familias activas.</strong></article>'}
+            </section>`);
+        })
+        .catch((error) => mostrarMensaje(error.message, 'error'))
+        .finally(ocultarCargando);
+    }
+
+    function guardarFamiliaColorUI(event) {
+      event.preventDefault();
+      const data = formToObject(event.target);
+      attachUser(data);
+      const fn = data.familia_color_id ? 'actualizarFamiliaColor' : 'crearFamiliaColor';
+      mostrarCargando();
+      api(fn, data)
+        .then((res) => {
+          if (!res.ok) throw new Error(res.mensaje);
+          mostrarMensaje(res.mensaje, 'success');
+          return api('getCatalogosIniciales');
+        })
+        .then((res) => {
+          if (!res.ok) throw new Error(res.mensaje);
+          state.catalogos = res.data || {};
+          if (data.producto_id) abrirFichaProducto(data.producto_id);
+          else mostrarFamiliasColor();
+        })
+        .catch((error) => mostrarMensaje(error.message, 'error'))
+        .finally(ocultarCargando);
+    }
+
+    function mostrarCrearReceta(producto_id) {
+      const producto = producto_id && state.currentFicha ? state.currentFicha.producto : null;
+      if (!producto) {
+        mostrarMensaje('Abre primero la ficha de un producto para crear su receta.', 'error');
+        return mostrarBusquedaProductos();
+      }
+      renderShell(`
+        ${viewHeader('Crear receta', `${esc(producto.sku)} - ${esc(producto.descripcion)}`)}
+        <section class="card">
+          <form class="grid two" onsubmit="guardarRecetaUI(event)">
+            <input type="hidden" name="producto_id" value="${escAttr(producto.producto_id)}">
+            ${field('Producto / SKU', 'sku_visible', `${producto.sku} - ${producto.descripcion}`, false, true)}
+            ${field('Maquina', 'maquina', '', true, false, 'maquinasList')}
+            ${maquinasDatalist()}
+            ${field('Version', 'version_visible', 'Automatica', false, true)}
+            ${field('Estatus', 'estatus_visible', 'Borrador', false, true)}
+            ${field('Velocidad objetivo', 'velocidad_objetivo')}
+            ${field('Material', 'material', producto.material_base || '')}
+            ${field('Ancho material', 'ancho_material')}
+            ${field('Repeticion', 'repeticion')}
+            ${field('Paso', 'paso')}
+            ${field('Tension entrada', 'tension_entrada')}
+            ${field('Tension salida', 'tension_salida')}
+            ${field('Temperatura secado', 'temperatura_secado')}
+            ${textarea('Observaciones arranque', 'observaciones_arranque')}
+            ${textarea('Problemas frecuentes', 'problemas_frecuentes')}
+            ${textarea('Ajustes recomendados', 'ajustes_recomendados')}
+            <div class="btn-row">
+              <button class="btn primary" type="submit">Crear receta borrador</button>
+              <button class="btn" type="button" onclick="abrirFichaProducto('${escAttr(producto.producto_id)}')">Cancelar</button>
+            </div>
+          </form>
+        </section>`);
+    }
+
+    function guardarRecetaUI(event) {
+      event.preventDefault();
+      const data = formToObject(event.target);
+      attachUser(data);
+      mostrarCargando();
+      api('crearReceta', data)
+        .then((res) => {
+          if (!res.ok) throw new Error(res.mensaje);
+          mostrarMensaje(res.mensaje, 'success');
+          return api('getFichaProducto', data.producto_id);
+        })
+        .then((res) => {
+          if (!res.ok) throw new Error(res.mensaje);
+          state.currentFicha = res.data;
+          renderFichaProducto();
+        })
+        .catch((error) => mostrarMensaje(error.message, 'error'))
+        .finally(ocultarCargando);
+    }
+
+    function mostrarUnidadesReceta(receta_id) {
+      const receta = findRecetaLocal(receta_id);
+      if (!receta) return mostrarMensaje('Receta no encontrada en la ficha actual.', 'error');
+      state.currentRecetaId = receta_id;
+      state.unidadesDraft = receta.unidades && receta.unidades.length ? receta.unidades.map((u) => Object.assign({}, u)) : [blankUnidad()];
+      renderUnidadesForm(receta);
+    }
+
+    function renderUnidadesForm(receta) {
+      const vigente = receta.estatus_receta === 'Vigente';
+      renderShell(`
+        ${viewHeader('Captura de unidades', `Receta ${esc(receta.receta_id)} / ${esc(receta.maquina)} / v${esc(receta.version)}`)}
+        <section class="card">
+          <div class="meta">
+            <span class="pill ${vigente ? 'success' : 'warning'}">${esc(receta.estatus_receta)}</span>
+            <span>SKU: ${esc(receta.sku)}</span>
+            <span>Maquina: ${esc(receta.maquina)}</span>
+          </div>
+          <form class="stack" style="margin-top:14px;" onsubmit="guardarUnidadesUI(event, '${escAttr(receta.receta_id)}')">
+            <div class="stack">
+              ${state.unidadesDraft.map((unidad, index) => renderUnidadCard(unidad, index, vigente)).join('')}
+            </div>
+            <div class="btn-row">
+              <button class="btn" type="button" onclick="agregarUnidadUI()" ${vigente ? 'disabled' : ''}>Agregar unidad</button>
+              <button class="btn primary" type="submit" ${vigente ? 'disabled' : ''}>Guardar unidades</button>
+              <button class="btn" type="button" onclick="abrirFichaProducto('${escAttr(receta.producto_id)}')">Volver a ficha</button>
+            </div>
+          </form>
+        </section>`);
+      if (vigente) mostrarMensaje('Receta vigente en modo consulta. Crea una nueva version para modificar.', 'error');
+    }
+
+    function agregarUnidadUI() {
+      persistUnidadesDraftFromDom();
+      state.unidadesDraft.push(blankUnidad());
+      renderUnidadesForm(findRecetaLocal(state.currentRecetaId));
+    }
+
+    function guardarUnidadesUI(event, receta_id) {
+      event.preventDefault();
+      persistUnidadesDraftFromDom();
+      const unidades = state.unidadesDraft.map((unidad) => Object.assign({}, unidad, { _usuario: state.user }));
+      mostrarCargando();
+      api('guardarUnidadesReceta', receta_id, unidades)
+        .then((res) => {
+          if (!res.ok) throw new Error(res.mensaje);
+          mostrarMensaje(res.mensaje, 'success');
+          return api('getFichaProducto', state.currentFicha.producto.producto_id);
+        })
+        .then((res) => {
+          if (!res.ok) throw new Error(res.mensaje);
+          state.currentFicha = res.data;
+          renderFichaProducto();
+        })
+        .catch((error) => mostrarMensaje(error.message, 'error'))
+        .finally(ocultarCargando);
+    }
+
+    function validarRecetaUI(receta_id) {
+      mostrarCargando();
+      api('validarReceta', receta_id, { _usuario: state.user })
+        .then((res) => {
+          if (!res.ok) throw new Error(res.mensaje);
+          mostrarMensaje(res.mensaje, 'success');
+          return api('getFichaProducto', state.currentFicha.producto.producto_id);
+        })
+        .then((res) => {
+          if (!res.ok) throw new Error(res.mensaje);
+          state.currentFicha = res.data;
+          renderFichaProducto();
+        })
+        .catch((error) => mostrarMensaje(error.message, 'error'))
+        .finally(ocultarCargando);
+    }
+
+    function crearNuevaVersionUI(receta_id) {
+      mostrarCargando();
+      api('crearNuevaVersionReceta', receta_id, { _usuario: state.user })
+        .then((res) => {
+          if (!res.ok) throw new Error(res.mensaje);
+          mostrarMensaje(res.mensaje, 'success');
+          return api('getFichaProducto', state.currentFicha.producto.producto_id);
+        })
+        .then((res) => {
+          if (!res.ok) throw new Error(res.mensaje);
+          state.currentFicha = res.data;
+          renderFichaProducto();
+        })
+        .catch((error) => mostrarMensaje(error.message, 'error'))
+        .finally(ocultarCargando);
+    }
+
+    function mostrarAdministracionBasica() {
+      renderShell(`
+        ${viewHeader('Administracion basica', 'La V1 administra estructura, usuarios y permisos desde las hojas oficiales.')}
+        <section class="card">
+          <p class="muted">Las hojas activas y preparadas se crean desde inicializarEstructuraV1(). La administracion avanzada queda fuera de alcance V1.</p>
+          <div class="btn-row">
+            <button class="btn primary" onclick="reinicializarUI()">Validar estructura V1</button>
+            <button class="btn" onclick="mostrarMenuPrincipal()">Volver</button>
+          </div>
+        </section>`);
+    }
+
+    function reinicializarUI() {
+      mostrarCargando();
+      api('inicializarEstructuraV1')
+        .then((res) => {
+          if (!res.ok) throw new Error(res.mensaje);
+          mostrarMensaje(res.mensaje, 'success');
+        })
+        .catch((error) => mostrarMensaje(error.message, 'error'))
+        .finally(ocultarCargando);
+    }
+
+    function moduloBloqueado() {
+      mostrarMensaje('Modulo visible pero bloqueado para fases posteriores.', 'error');
+    }
+
+    function renderShell(content) {
+      document.getElementById('app').innerHTML = `
+        <header class="topbar">
+          <div class="topbar-inner">
+            <div class="brand">
+              <strong>APP Recetas de Impresion PCN</strong>
+              <span>Data Solution / PCN - V1</span>
+            </div>
+            <div class="session">
+              <div class="session-name">${esc(state.user ? state.user.nombre : '')}<br>${esc(state.user ? state.user.rol : '')}</div>
+              <button class="btn ghost" onclick="mostrarMenuPrincipal()">Menu</button>
+              <button class="btn ghost" onclick="cerrarSesion()">Salir</button>
+            </div>
+          </div>
+        </header>
+        <main class="page">${content}</main>`;
+    }
+
+    function cerrarSesion() {
+      localStorage.removeItem('pcn_recetas_user');
+      state.user = null;
+      state.currentFicha = null;
+      mostrarLogin();
+    }
+
+    function viewHeader(title, subtitle) {
+      return `<section class="section-title"><div><h2>${esc(title)}</h2><p>${subtitle || ''}</p></div></section>`;
+    }
+
+    function moduleButton(title, text, action, enabled, locked) {
+      const isLocked = locked || !enabled;
+      return `
+        <button class="btn module ${isLocked ? 'locked' : ''}" type="button" onclick="${isLocked ? 'moduloBloqueado()' : action}">
+          <span class="pill ${isLocked ? 'lock' : 'success'}">${isLocked ? 'Bloqueado' : 'Activo'}</span>
+          <strong>${esc(title)}</strong>
+          <span>${esc(text)}</span>
+        </button>`;
+    }
+
+    function renderRecipeCard(receta) {
+      const vigente = receta.estatus_receta === 'Vigente';
+      const canValidate = can('permiso_validar_receta') && !vigente;
+      return `
+        <article class="card">
+          <div class="recipe-head">
+            <h3>${esc(receta.maquina)} / version ${esc(receta.version)}</h3>
+            <span class="pill ${vigente ? 'success' : 'warning'}">${esc(receta.estatus_receta)}</span>
+          </div>
+          <div class="kv">
+            <div><b>Unidades activas</b><span>${esc(receta.unidades_activas || 0)}</span></div>
+            <div><b>Velocidad objetivo</b><span>${esc(receta.velocidad_objetivo || '-')}</span></div>
+            <div><b>Material</b><span>${esc(receta.material || '-')}</span></div>
+            <div><b>Ancho material</b><span>${esc(receta.ancho_material || '-')}</span></div>
+            <div><b>Repeticion</b><span>${esc(receta.repeticion || '-')}</span></div>
+            <div><b>Validado por</b><span>${esc(receta.validado_por || '-')}</span></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn" onclick="mostrarUnidadesReceta('${escAttr(receta.receta_id)}')">${vigente ? 'Consultar unidades' : 'Capturar unidades'}</button>
+            <button class="btn primary" onclick="validarRecetaUI('${escAttr(receta.receta_id)}')" ${canValidate ? '' : 'disabled'}>Validar receta</button>
+            <button class="btn" onclick="crearNuevaVersionUI('${escAttr(receta.receta_id)}')" ${can('permiso_crear_receta') ? '' : 'disabled'}>Nueva version</button>
+          </div>
+          ${vigente ? '<p class="muted">Receta vigente protegida contra edicion directa.</p>' : ''}
+        </article>`;
+    }
+
+    function renderFamiliaCard(f) {
+      return `
+        <article class="card">
+          <div class="recipe-head">
+            <h3>${esc(f.nombre_familia)}</h3>
+            <span class="pill success">Activa</span>
+          </div>
+          <p class="muted">${esc(f.descripcion_familia || 'Sin descripcion')}</p>
+          <div class="kv">
+            <div><b>Tono objetivo</b><span>${esc(f.tono_objetivo_general || '-')}</span></div>
+            <div><b>Observaciones</b><span>${esc(f.observaciones_color || '-')}</span></div>
+            <div><b>ID</b><span>${esc(f.familia_color_id)}</span></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn" onclick="mostrarFamiliasColor('${escAttr(f.familia_color_id)}')" ${canAny(['permiso_crear_producto', 'permiso_crear_receta']) ? '' : 'disabled'}>Editar familia</button>
+          </div>
+        </article>`;
+    }
+
+    function renderUnidadCard(unidad, index, disabled) {
+      const p = `unidad_${index}_`;
+      return `
+        <article class="unit-card" data-unit-index="${index}">
+          <div class="recipe-head">
+            <h3>Unidad ${index + 1}</h3>
+            <span class="pill ${value(unidad, 'activa', 'Si') === 'Si' ? 'success' : 'lock'}">${esc(value(unidad, 'activa', 'Si'))}</span>
+          </div>
+          <div class="grid three">
+            ${field('Numero unidad', p + 'numero_unidad', unidad.numero_unidad || '', true, disabled)}
+            <div class="field">
+              <label for="${p}activa">Activa</label>
+              <select id="${p}activa" name="activa" ${disabled ? 'disabled' : ''}>
+                <option value="Si" ${value(unidad, 'activa', 'Si') === 'Si' ? 'selected' : ''}>Si</option>
+                <option value="No" ${value(unidad, 'activa', 'Si') === 'No' ? 'selected' : ''}>No</option>
+              </select>
+            </div>
+            ${field('Color', p + 'color', unidad.color || '', false, disabled)}
+            ${field('Codigo tinta', p + 'codigo_tinta', unidad.codigo_tinta || '', false, disabled)}
+            ${field('Tono', p + 'tono', unidad.tono || '', false, disabled)}
+            ${field('Viscosidad', p + 'viscosidad', unidad.viscosidad || '', false, disabled)}
+            ${field('Anilox', p + 'anilox', unidad.anilox || '', false, disabled)}
+            ${field('Manga', p + 'manga', unidad.manga || '', false, disabled)}
+            ${field('Sticky back', p + 'sticky_back', unidad.sticky_back || '', false, disabled)}
+            ${field('Fotopolimero', p + 'fotopolimero', unidad.fotopolimero || '', false, disabled)}
+            ${field('Calzas', p + 'calzas', unidad.calzas || '', false, disabled)}
+            ${field('Presion referencia', p + 'presion_referencia', unidad.presion_referencia || '', false, disabled)}
+            ${field('Orden impresion', p + 'orden_impresion', unidad.orden_impresion || '', false, disabled)}
+          </div>
+          ${textarea('Detalle montaje', p + 'detalle_montaje', unidad.detalle_montaje || '', disabled)}
+          ${textarea('Comentarios unidad', p + 'comentarios_unidad', unidad.comentarios_unidad || '', disabled)}
+        </article>`;
+    }
+
+    function persistUnidadesDraftFromDom() {
+      const cards = Array.from(document.querySelectorAll('[data-unit-index]'));
+      state.unidadesDraft = cards.map((card) => {
+        const get = (name) => {
+          const el = card.querySelector(`[name="${name}"]`);
+          return el ? el.value.trim() : '';
+        };
+        return {
+          numero_unidad: get('numero_unidad'),
+          activa: get('activa') || 'Si',
+          color: get('color'),
+          codigo_tinta: get('codigo_tinta'),
+          tono: get('tono'),
+          viscosidad: get('viscosidad'),
+          anilox: get('anilox'),
+          manga: get('manga'),
+          sticky_back: get('sticky_back'),
+          fotopolimero: get('fotopolimero'),
+          calzas: get('calzas'),
+          presion_referencia: get('presion_referencia'),
+          orden_impresion: get('orden_impresion'),
+          detalle_montaje: get('detalle_montaje'),
+          comentarios_unidad: get('comentarios_unidad')
+        };
+      });
+    }
+
+    function blankUnidad() {
+      return {
+        numero_unidad: '',
+        activa: 'Si',
+        color: '',
+        codigo_tinta: '',
+        tono: '',
+        viscosidad: '',
+        anilox: '',
+        manga: '',
+        sticky_back: '',
+        fotopolimero: '',
+        calzas: '',
+        presion_referencia: '',
+        orden_impresion: '',
+        detalle_montaje: '',
+        comentarios_unidad: ''
+      };
+    }
+
+    function findRecetaLocal(receta_id) {
+      const recetas = state.currentFicha ? state.currentFicha.recetas || [] : [];
+      return recetas.find((receta) => receta.receta_id === receta_id);
+    }
+
+    function field(labelText, name, val, required, disabled, list) {
+      const inputName = /^unidad_\d+_/.test(name) ? name.replace(/^unidad_\d+_/, '') : name;
+      return `
+        <div class="field">
+          <label for="${escAttr(name)}">${esc(labelText)}</label>
+          <input id="${escAttr(name)}" name="${escAttr(inputName)}" value="${escAttr(val || '')}" ${required ? 'required' : ''} ${disabled ? 'disabled' : ''} ${list ? `list="${escAttr(list)}"` : ''}>
+        </div>`;
+    }
+
+    function textarea(labelText, name, val, disabled) {
+      const inputName = /^unidad_\d+_/.test(name) ? name.replace(/^unidad_\d+_/, '') : name;
+      return `
+        <div class="field" style="grid-column:1/-1;">
+          <label for="${escAttr(name)}">${esc(labelText)}</label>
+          <textarea id="${escAttr(name)}" name="${escAttr(inputName)}" ${disabled ? 'disabled' : ''}>${esc(val || '')}</textarea>
+        </div>`;
+    }
+
+    function familiaOptions(selected) {
+      return (state.catalogos.familias || []).map((f) => `
+        <option value="${escAttr(f.familia_color_id)}" ${selected === f.familia_color_id ? 'selected' : ''}>${esc(f.nombre_familia)}</option>`).join('');
+    }
+
+    function maquinasDatalist() {
+      return `<datalist id="maquinasList">${(state.catalogos.maquinas || []).map((m) => `<option value="${escAttr(m)}"></option>`).join('')}</datalist>`;
+    }
+
+    function formToObject(form) {
+      const data = {};
+      Array.from(new FormData(form).entries()).forEach(([key, val]) => { data[key] = String(val).trim(); });
+      return data;
+    }
+
+    function attachUser(data) {
+      data._usuario = state.user;
+      return data;
+    }
+
+    function can(permission) {
+      if (!state.user) return false;
+      return isYes(state.user.permiso_admin) || isYes(state.user[permission]);
+    }
+
+    function canAny(permissions) {
+      return permissions.some(can);
+    }
+
+    function isYes(v) {
+      return ['si', 'sí', 's', 'yes', 'true', '1'].includes(String(v || '').trim().toLowerCase());
+    }
+
+    function value(obj, key, fallback) {
+      return obj && obj[key] ? obj[key] : fallback;
+    }
+
+    async function api(action, ...args) {
+      if (!BASE_URL || BASE_URL === 'PEGA_AQUI_LA_URL_DE_TU_WEB_APP') {
+        throw new Error('Configura BASE_URL con la URL publicada de Apps Script.');
+      }
+
+      const response = await fetch(BASE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action, args }),
+        redirect: 'follow'
+      });
+
+      if (!response.ok) throw new Error('No se pudo conectar con la API de Apps Script.');
+      const payload = await response.json();
+      if (!payload || typeof payload.ok === 'undefined') throw new Error('La API devolvio una respuesta invalida.');
+      return payload;
+    }
+
+    function mostrarMensaje(texto, tipo) {
+      const message = document.getElementById('message');
+      message.textContent = texto || '';
+      message.className = `message show ${tipo || ''}`;
+      clearTimeout(message._timer);
+      message._timer = setTimeout(() => { message.className = 'message'; }, 3600);
+    }
+
+    function mostrarCargando() {
+      document.getElementById('loading').classList.add('show');
+    }
+
+    function ocultarCargando() {
+      document.getElementById('loading').classList.remove('show');
+    }
+
+    function esc(value) {
+      return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function escAttr(value) {
+      return esc(value).replace(/`/g, '&#096;');
+    }
+  </script>
+</body>
+</html>
