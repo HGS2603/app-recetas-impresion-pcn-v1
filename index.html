@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>APP Recetas de Impresion PCN - V1</title>
+  <title>APP Recetas de Impresion PCN - V1.1A</title>
   <style>
     :root {
       --blue: #123c69;
@@ -47,9 +47,9 @@
     .card {
       width: 100%;
       background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      box-shadow: 0 8px 22px rgba(18, 60, 105, 0.06);
+      border: 1px solid rgba(217, 226, 236, 0.9);
+      border-radius: 16px;
+      box-shadow: 0 10px 26px rgba(18, 60, 105, 0.08);
     }
 
     .login-card {
@@ -70,9 +70,9 @@
       position: sticky;
       top: 0;
       z-index: 10;
-      background: var(--blue);
+      background: linear-gradient(135deg, #0f345d 0%, #123c69 58%, #16899a 100%);
       color: #fff;
-      padding: 12px 14px;
+      padding: 10px 12px;
       box-shadow: var(--shadow);
     }
 
@@ -86,8 +86,8 @@
     }
 
     .brand { min-width: 0; }
-    .brand strong { display: block; font-size: 15px; }
-    .brand span { display: block; color: #d9f3f7; font-size: 12px; margin-top: 2px; }
+    .brand strong { display: block; font-size: 14px; letter-spacing: 0.2px; }
+    .brand span { display: block; color: #d9f3f7; font-size: 11px; margin-top: 2px; }
 
     .session {
       display: flex;
@@ -106,6 +106,14 @@
     }
 
     .card { padding: 16px; }
+
+    .topbar .btn.ghost {
+      min-height: 36px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+      background: rgba(255,255,255,0.08);
+    }
 
     .grid,
     .stack,
@@ -145,7 +153,7 @@
 
     .btn {
       min-height: 48px;
-      border-radius: 8px;
+      border-radius: 12px;
       padding: 11px 14px;
       background: #e9eef5;
       color: var(--blue);
@@ -156,7 +164,10 @@
       font-weight: 700;
       text-align: center;
       overflow-wrap: anywhere;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
     }
+
+    .btn:active { transform: scale(0.99); }
 
     .btn.primary { background: var(--blue); color: #fff; }
     .btn.accent { background: var(--cyan); color: #062b34; }
@@ -168,6 +179,8 @@
       gap: 10px;
       margin-top: 14px;
     }
+
+    .btn-row .btn { flex: 1 1 150px; }
 
     .section-title {
       display: flex;
@@ -185,21 +198,50 @@
     }
 
     .module {
-      min-height: 118px;
+      min-height: 108px;
       width: 100%;
       text-align: left;
-      align-items: flex-start;
+      align-items: stretch;
       justify-content: space-between;
       background: #fff;
       color: var(--ink);
-      border: 1px solid var(--line);
-      box-shadow: 0 10px 24px rgba(18, 60, 105, 0.08);
-      padding: 16px;
+      border: 1px solid rgba(217, 226, 236, 0.9);
+      box-shadow: 0 12px 26px rgba(18, 60, 105, 0.08);
+      padding: 15px;
+      border-radius: 16px;
+      display: grid;
+      gap: 10px;
     }
 
-    .module strong { display: block; color: var(--blue); font-size: 17px; margin: 8px 0; }
+    .module strong { display: block; color: var(--blue); font-size: 17px; margin: 0; }
     .module span { display: block; color: var(--muted); font-weight: 400; font-size: 13px; line-height: 1.35; }
-    .module.locked { background: #f1f5f9; }
+    .module.locked { background: #f1f5f9; box-shadow: none; }
+    .module-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .module-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: inline-grid;
+      place-items: center;
+      background: linear-gradient(135deg, #eaf7f9, #edf4ff);
+      color: var(--blue);
+      font-size: 19px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .module.locked .module-icon { background: #e2e8f0; color: #64748b; }
+    .module-action {
+      margin-top: 2px;
+      color: var(--cyan);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+    }
 
     .pill {
       display: inline-flex;
@@ -272,8 +314,51 @@
       gap: 12px;
       padding: 14px;
       border: 1px solid var(--line);
-      border-radius: 8px;
+      border-radius: 14px;
       background: #fbfdff;
+    }
+
+    .menu-hero {
+      margin-bottom: 14px;
+      background: linear-gradient(135deg, #ffffff 0%, #f2fbfd 100%);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .menu-hero::after {
+      content: "";
+      position: absolute;
+      width: 130px;
+      height: 130px;
+      border-radius: 999px;
+      right: -48px;
+      top: -50px;
+      background: rgba(32, 167, 184, 0.12);
+    }
+
+    .menu-hero h2 { margin-bottom: 5px; }
+    .menu-hero p { margin: 0; color: var(--muted); font-size: 13px; }
+    .menu-hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .screen-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #0f6470;
+      background: #eaf7f9;
+      border: 1px solid #c7edf2;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 8px;
     }
 
     .message {
@@ -308,6 +393,29 @@
     }
 
     .loading.show { display: grid; }
+
+    @media (max-width: 480px) {
+      .btn-row {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .section-title {
+        display: block;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+      }
+
+      .session {
+        gap: 6px;
+      }
+
+      .brand strong {
+        max-width: 170px;
+      }
+    }
 
     @media (min-width: 720px) {
       .page { padding: 24px 20px 44px; }
@@ -402,16 +510,25 @@
 
     function mostrarMenuPrincipal() {
       renderShell(`
-        ${viewHeader('Menu principal', 'Primero busca el SKU; si no existe, crea el producto y despues su receta.')}
+        <section class="card menu-hero">
+          <span class="screen-label">V1.1A · Menú operativo</span>
+          <h2>Recetas de impresión</h2>
+          <p>Consulta primero el SKU. Si no existe, crea el producto y después captura su receta.</p>
+          <div class="menu-hero-meta">
+            <span class="pill success">GitHub Pages</span>
+            <span class="pill success">API Apps Script</span>
+            <span class="pill warning">V1 estable</span>
+          </div>
+        </section>
         <section class="menu-grid">
-          ${moduleButton('Buscar receta', 'SKU, descripcion, familia de color y maquina.', 'mostrarBusquedaProductos()', true)}
-          ${moduleButton('Alta producto', 'Crear producto activo con estatus Sin receta.', 'mostrarAltaProducto()', can('permiso_crear_producto'))}
-          ${moduleButton('Familias de color', 'Crear, consultar y asignar referencias de color.', 'mostrarFamiliasColor()', canAny(['permiso_crear_producto', 'permiso_crear_receta']))}
-          ${moduleButton('Crear receta', 'Alta de receta borrador con version automatica.', 'mostrarCrearReceta()', can('permiso_crear_receta'))}
-          ${moduleButton('Administracion basica', 'Estructura, usuarios y permisos desde hojas.', 'mostrarAdministracionBasica()', can('permiso_admin'))}
-          ${moduleButton('Corridas', 'Fase posterior visible y bloqueada.', 'moduloBloqueado()', false, true)}
-          ${moduleButton('Retenciones', 'Fase posterior visible y bloqueada.', 'moduloBloqueado()', false, true)}
-          ${moduleButton('Reportes', 'Fase posterior visible y bloqueada.', 'moduloBloqueado()', false, true)}
+          ${moduleButton('Buscar receta', 'Consulta SKU, familia, máquina y receta vigente.', 'mostrarBusquedaProductos()', true)}
+          ${moduleButton('Alta producto', 'Crea un SKU nuevo con estatus Sin receta.', 'mostrarAltaProducto()', can('permiso_crear_producto'))}
+          ${moduleButton('Familias de color', 'Agrupa tonos y referencias visuales.', 'mostrarFamiliasColor()', canAny(['permiso_crear_producto', 'permiso_crear_receta']))}
+          ${moduleButton('Crear receta', 'Genera una receta borrador por máquina.', 'mostrarCrearReceta()', can('permiso_crear_receta'))}
+          ${moduleButton('Administración', 'Valida estructura y permisos base.', 'mostrarAdministracionBasica()', can('permiso_admin'))}
+          ${moduleButton('Corridas', 'Registro real de producción en fase posterior.', 'moduloBloqueado()', false, true)}
+          ${moduleButton('Retenciones', 'Referencias de color en fase posterior.', 'moduloBloqueado()', false, true)}
+          ${moduleButton('Reportes', 'Indicadores y análisis en fase posterior.', 'moduloBloqueado()', false, true)}
         </section>`);
     }
 
@@ -817,7 +934,7 @@
           <div class="topbar-inner">
             <div class="brand">
               <strong>APP Recetas de Impresion PCN</strong>
-              <span>Data Solution / PCN - V1</span>
+              <span>Data Solution / PCN · V1.1A</span>
             </div>
             <div class="session">
               <div class="session-name">${esc(state.user ? state.user.nombre : '')}<br>${esc(state.user ? state.user.rol : '')}</div>
@@ -842,11 +959,28 @@
 
     function moduleButton(title, text, action, enabled, locked) {
       const isLocked = locked || !enabled;
+      const icons = {
+        'Buscar receta': '🔎',
+        'Alta producto': '+',
+        'Familias de color': '🎨',
+        'Crear receta': '⚙',
+        'Administración': '☰',
+        'Administracion basica': '☰',
+        'Corridas': '↻',
+        'Retenciones': '◉',
+        'Reportes': '▣'
+      };
       return `
         <button class="btn module ${isLocked ? 'locked' : ''}" type="button" onclick="${isLocked ? 'moduloBloqueado()' : action}">
-          <span class="pill ${isLocked ? 'lock' : 'success'}">${isLocked ? 'Bloqueado' : 'Activo'}</span>
-          <strong>${esc(title)}</strong>
-          <span>${esc(text)}</span>
+          <div class="module-top">
+            <span class="module-icon">${icons[title] || '•'}</span>
+            <span class="pill ${isLocked ? 'lock' : 'success'}">${isLocked ? 'Bloqueado' : 'Activo'}</span>
+          </div>
+          <div>
+            <strong>${esc(title)}</strong>
+            <span>${esc(text)}</span>
+          </div>
+          <div class="module-action">${isLocked ? 'Disponible en otra fase' : 'Abrir módulo'}</div>
         </button>`;
     }
 
